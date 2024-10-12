@@ -92,6 +92,6 @@ export type DynamicFormField =
 
 export interface DynamicForm {
   fields: DynamicFormField[];
-  onSubmit: (values: Record<string, any>) => void;
+  onSubmit: (values: Record<string, any>, eventName: string) => void;
   onChange?: (field: DynamicFormField, value: any) => void;
 }

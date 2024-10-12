@@ -1,6 +1,8 @@
 import React from "react";
+import { Box, Typography, useTheme } from "@mui/material";
 import DynamicFormComponent from "../../Components/Forms/DynamicFormComponent";
 import { FormInputType, DynamicForm } from "../../Types/formTypes";
+import { useParams } from "react-router-dom";
 
 const form: DynamicForm = {
   fields: [
@@ -49,7 +51,17 @@ const form: DynamicForm = {
       type: FormInputType.Checkbox,
     },
   ],
-  onSubmit: (values) => {
+  onSubmit: (values, eventName: string) => {
+    fetch("http://localhost:3000/api/form/submit-form", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        form: values, // assuming `values` is already an object
+        eventName: eventName,
+      }),
+    });
     console.log("Form submitted with values:", values);
   },
   onChange: (field, value) => {
@@ -58,11 +70,26 @@ const form: DynamicForm = {
 };
 
 const Form: React.FC = () => {
+  const theme = useTheme();
+  const { name } = useParams();
   return (
-    <div>
-      <h1>Dynamic Form Example</h1>
-      <DynamicFormComponent initialForm={form} />
-    </div>
+    <Box bgcolor="#ffffff" display="flex" flexDirection="column" gap={2}>
+      <Typography
+        variant="h4"
+        textAlign="center"
+        color="primary"
+        sx={{ fontFamily: "Dela Gothic One, sans-serif !important" }}
+      >
+        Form Preview
+      </Typography>
+      <Box
+        p={"2rem"}
+        borderRadius="0.5rem"
+        border={`1px solid ${theme.palette.primary.main}`}
+      >
+        <DynamicFormComponent initialForm={form} eventName={name as string} />
+      </Box>
+    </Box>
   );
 };
 

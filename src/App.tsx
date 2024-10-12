@@ -1,9 +1,12 @@
 import { useState, useContext } from "react";
 import { Box, ThemeProvider, createTheme } from "@mui/material";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { RecoilRoot } from "recoil";
+import Navbar from "./Components/Navbar";
 import Landing from "./Pages/Landing";
 import Form from "./Pages/Form";
+import Login from "./Auth/Login";
+import Signup from "./Auth/Signup";
 import "./App.css";
 
 const theme = createTheme({
@@ -18,22 +21,30 @@ const theme = createTheme({
   },
 });
 
+function NavbarWrapper() {
+  const location = useLocation();
+  const hideNavbarPaths = ["/login", "/signup"];
+
+  return !hideNavbarPaths.includes(location.pathname) ? <Navbar /> : null;
+}
+
 function App() {
   return (
-    <>
-      <Box width="100%" display="flex" justifyContent="center">
-        <RecoilRoot>
-          <ThemeProvider theme={theme}>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Landing />} />
-                <Route path="/create-form/:name" element={<Form />} />
-              </Routes>
-            </BrowserRouter>
-          </ThemeProvider>
-        </RecoilRoot>
-      </Box>
-    </>
+    <RecoilRoot>
+      <ThemeProvider theme={theme}>
+        <BrowserRouter>
+          <Box>
+            <NavbarWrapper />
+            <Routes>
+              <Route path="/manageEvent" element={<Landing />} />
+              <Route path="/create-form/:name" element={<Form />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+            </Routes>
+          </Box>
+        </BrowserRouter>
+      </ThemeProvider>
+    </RecoilRoot>
   );
 }
 
